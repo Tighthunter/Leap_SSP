@@ -2,7 +2,8 @@
 using System.Collections;
 using Leap.Unity;
 
-class Gesture : MonoBehaviour {
+public class Gesture
+{
     string gestureName;
     int id;
     public int[] beats;
