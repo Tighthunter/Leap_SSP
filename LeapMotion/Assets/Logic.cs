@@ -19,6 +19,8 @@ class Logic : MonoBehaviour {
     public void TEST ()
     {
         var g = HandLogic.getGesture();
+
+        Debug.Log(g.gestureName);
     }
 
     public int compareGestures(Gesture player1, Gesture player2)

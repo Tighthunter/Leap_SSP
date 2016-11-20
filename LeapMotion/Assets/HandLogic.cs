@@ -25,7 +25,6 @@ public static class HandLogic
             {
                 pointingstates[i] = PointingState.NotExtended;
             }
-            Debug.Log(pointingstates[i]);
             i++;
         }
         return compareGesture(pointingstates);
@@ -41,11 +40,18 @@ public static class HandLogic
 
         foreach (var gesture in GestureList)
         {
-            if(gesture.pointingStates == pointStates)
+            int i = 0;
+            bool found = true;
+            foreach (var pointingState in gesture.pointingStates)
             {
-                g = gesture;
-                Debug.Log("Gesture Found!: " + g);
+                if (pointingState != pointStates[i++])
+                {
+                    found = false;
+                    break;
+                }
             }
+            if(found)
+            g = gesture;
         }
         return g;
     }
