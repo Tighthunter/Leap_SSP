@@ -4,11 +4,11 @@ using Leap.Unity;
 
 public class Gesture
 {
-    string gestureName;
+    public string gestureName;
     int id;
     public int[] beats;
 
-    PointingState[] pointingStates;
+    public PointingState[] pointingStates;
 
     public Gesture(string gestureName, int id, int[] beats, PointingState[] states)
     {

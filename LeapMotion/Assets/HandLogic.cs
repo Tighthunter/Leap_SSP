@@ -28,7 +28,25 @@ public static class HandLogic
             Debug.Log(pointingstates[i]);
             i++;
         }
-        Gesture g = new Gesture("gesture", 0, new int[] { 0 }, pointingstates);
+        return compareGesture(pointingstates);
+    }
+    private static Gesture compareGesture(PointingState[] pointStates)
+    {
+        List<Gesture> GestureList = new List<Gesture>();
+        GestureList.Add(Gesture.GesturePaper);
+        GestureList.Add(Gesture.GestureScissors);
+        GestureList.Add(Gesture.GestureStone);
+
+        Gesture g = null;
+
+        foreach (var gesture in GestureList)
+        {
+            if(gesture.pointingStates == pointStates)
+            {
+                g = gesture;
+                Debug.Log("Gesture Found!: " + g);
+            }
+        }
         return g;
     }
 }
