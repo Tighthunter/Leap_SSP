@@ -9,7 +9,5 @@ namespace Assets.Interfaces
     public interface IPlayer
     {
         IObservable<PlayerState> GetPlayerState();
-
-        IObservable<Gesture> GetPlayerGesture();
     }
 }
