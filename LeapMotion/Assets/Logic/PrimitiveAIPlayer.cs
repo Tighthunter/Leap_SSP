@@ -12,35 +12,36 @@ namespace Assets.Logic
     public class PrimitiveAIPlayer : MonoBehaviour , IPlayer
     {
         private Animation animation;
-
         private bool hasStarted = false;
+        private int currentAnimsPlayedCount = 0;
 
-        //http://answers.unity3d.com/questions/37411/how-can-i-wait-for-an-animation-to-complete.html
+        public int AnimTimesToPlay = 3;
+
+        //TODO: observable from event
 
         void Awake()
         {
             animation = GetComponent<Animation>();
-        }
-
-        void Update()
-        {
-            //return null;
-            //yield return StartCoroutine(WaitForAnimation(animation));
+            StartAi();
         }
 
         public void StartAi()
         {
-
+            if (!hasStarted)
+            {
+                animation.Play();
+            }
         }
 
         public void OnAnimationHalfFinished()
         {
             
+            Debug.Log("Animation Half finished");
         }
 
         public void OnAnimationFinished()
         {
-            
+            Debug.Log("Animation finished");
         }
 
         public IObservable<PlayerState> GetPlayerState()
