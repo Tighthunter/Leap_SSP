@@ -13,6 +13,8 @@ namespace Assets.Logic
     {
         private Animation animation;
 
+        private bool hasStarted = false;
+
         //http://answers.unity3d.com/questions/37411/how-can-i-wait-for-an-animation-to-complete.html
 
         void Awake()
@@ -26,17 +28,24 @@ namespace Assets.Logic
             //yield return StartCoroutine(WaitForAnimation(animation));
         }
 
+        public void StartAi()
+        {
+
+        }
+
+        public void OnAnimationHalfFinished()
+        {
+            
+        }
+
+        public void OnAnimationFinished()
+        {
+            
+        }
+
         public IObservable<PlayerState> GetPlayerState()
         {
             throw new NotImplementedException();
-        }
-
-        private IEnumerator WaitForAnimation(Animation animation)
-        {
-            do
-            {
-                yield return null;
-            } while (animation.isPlaying);
         }
 
     }

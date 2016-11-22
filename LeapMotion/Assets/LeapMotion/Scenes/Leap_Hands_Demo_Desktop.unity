@@ -138,7 +138,17 @@ Prefab:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 111000013760192020, guid: 646246c605bd52240adcf8830a1c4f87,
+        type: 2}
+      propertyPath: m_PlayAutomatically
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010785356024, guid: 646246c605bd52240adcf8830a1c4f87, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -43.755
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 95000012970129326, guid: 646246c605bd52240adcf8830a1c4f87, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 646246c605bd52240adcf8830a1c4f87, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &40998157 stripped
