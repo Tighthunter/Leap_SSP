@@ -31,7 +31,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1000010829724306
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -85,7 +85,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1000012052585082
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -123,12 +123,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012052585082}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000009536743, y: -0, z: 3.94}
+  m_LocalPosition: {x: 0, y: 0, z: 2.0100007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000012470091734}
-  m_RootOrder: 3
+  m_Father: {fileID: 4000011263951956}
+  m_RootOrder: 1
 --- !u!4 &4000010907462224
 Transform:
   m_ObjectHideFlags: 1
@@ -149,12 +149,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010829724306}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0000009536743, y: -0, z: 2.98}
-  m_LocalScale: {x: 1, y: 1.0000007, z: 1.0000007}
+  m_LocalPosition: {x: 0, y: 0, z: 1.0499996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000012470091734}
-  m_RootOrder: 4
+  m_Father: {fileID: 4000011263951956}
+  m_RootOrder: 0
 --- !u!4 &4000011263951956
 Transform:
   m_ObjectHideFlags: 1
@@ -165,7 +165,9 @@ Transform:
   m_LocalPosition: {x: 0.0000009536743, y: 0, z: 1.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
+  m_Children:
+  - {fileID: 4000010955393696}
+  - {fileID: 4000010696839310}
   m_Father: {fileID: 4000012470091734}
   m_RootOrder: 2
 --- !u!4 &4000012470091734
@@ -182,8 +184,6 @@ Transform:
   - {fileID: 4000010907462224}
   - {fileID: 4000013815176036}
   - {fileID: 4000011263951956}
-  - {fileID: 4000010696839310}
-  - {fileID: 4000010955393696}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &4000013815176036
