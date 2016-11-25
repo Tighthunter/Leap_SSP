@@ -9,12 +9,15 @@ using UnityEngine;
 
 namespace Assets.Logic
 {
-    public class PrimitiveAIPlayer : MonoBehaviour , IPlayer
+    public class PrimitiveAiPlayer : MonoBehaviour , IPlayer
     {
         private Animation animation;
         private bool hasStarted = false;
         private int currentAnimsPlayedCount = 0;
+        private Subject<int> animFinishedSubject = new Subject<int>();
+        public IGestureCalculator GestureCalculator { get; set; }
 
+        public MappedHand[] MappedHands;
         public int AnimTimesToPlay = 3;
 
         //TODO: observable from event
@@ -22,7 +25,6 @@ namespace Assets.Logic
         void Awake()
         {
             animation = GetComponent<Animation>();
-            StartAi();
         }
 
         public void StartAi()
@@ -33,15 +35,10 @@ namespace Assets.Logic
             }
         }
 
-        public void OnAnimationHalfFinished()
-        {
-            
-            Debug.Log("Animation Half finished");
-        }
-
         public void OnAnimationFinished()
         {
             Debug.Log("Animation finished");
+            animFinishedSubject.OnNext(++currentAnimsPlayedCount);
         }
 
         public IObservable<PlayerState> GetPlayerState()

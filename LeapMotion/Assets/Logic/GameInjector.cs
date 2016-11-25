@@ -12,6 +12,8 @@ namespace Assets.Logic
     {
         private GameInjector _instance;
 
+        public PrimitiveAiPlayer AiPlayer;
+
         void Awake()
         {
             if (_instance == null)
@@ -21,6 +23,12 @@ namespace Assets.Logic
             else if (_instance != this)
             {
                 Destroy(gameObject);
+            }
+
+            //Inject properties here
+            if (AiPlayer != null)
+            {
+                AiPlayer.GestureCalculator = new RandomGestureCalculator(new[] {Gesture.GesturePaper, Gesture.GestureScissors, Gesture.GestureStone});
             }
         }
 
