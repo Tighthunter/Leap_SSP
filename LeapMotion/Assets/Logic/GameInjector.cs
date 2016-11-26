@@ -5,6 +5,7 @@ using System.Text;
 using Assets.Interfaces;
 using Assets.Logic.Mock;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Logic
 {
@@ -13,6 +14,9 @@ namespace Assets.Logic
         private GameInjector _instance;
 
         public PrimitiveAiPlayer AiPlayer;
+        public Text EnemyWinCount;
+        public Text PlayerWinCount;
+        public Text Countdown;
 
         void Awake()
         {
