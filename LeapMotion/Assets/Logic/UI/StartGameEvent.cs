@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Interfaces;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StartGameEvent : MonoBehaviour {
 
@@ -13,4 +15,10 @@ public class StartGameEvent : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void StartGame()
+    {
+        DontDestroyOnLoad(GameObject.Find("ConfigObject"));
+        SceneManager.LoadScene(1);
+    }
 }
