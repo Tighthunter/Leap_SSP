@@ -5,12 +5,18 @@ using System.Text;
 using Assets.Interfaces;
 using Assets.Logic.Mock;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Logic
 {
     public class GameInjector : MonoBehaviour
     {
         private GameInjector _instance;
+
+        public PrimitiveAiPlayer AiPlayer;
+        public Text EnemyWinCount;
+        public Text PlayerWinCount;
+        public Text Countdown;
 
         void Awake()
         {
@@ -21,6 +27,12 @@ namespace Assets.Logic
             else if (_instance != this)
             {
                 Destroy(gameObject);
+            }
+
+            //Inject properties here
+            if (AiPlayer != null)
+            {
+                AiPlayer.GestureCalculator = new RandomGestureCalculator(new[] {Gesture.GesturePaper, Gesture.GestureScissors, Gesture.GestureStone});
             }
         }
 
