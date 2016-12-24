@@ -7,6 +7,8 @@ namespace Assets.Logic
 {
     internal class UiLogic
     {
+        const int MaxTimesTried = 3;
+
         private readonly Text _enemyText;
         private readonly Text _mainPlayerText;
         private readonly Text _countdownText;
@@ -43,19 +45,19 @@ namespace Assets.Logic
                     _countdownText.enabled = true;
                     _countdownText.text = gameState.WinnerName + " won the game! Press Escape to return to the menu";
                 }
-                else
-                {
-                    _enemyText.text = gameState.PlayerOneWinCount.ToString();
-                    _mainPlayerText.text = gameState.PlayerTwoWinCount.ToString();
-                }
-
+                _enemyText.text = gameState.PlayerOneWinCount.ToString();
+                _mainPlayerText.text = gameState.PlayerTwoWinCount.ToString();
             }
         }
 
         //for cd
         private void HandleAiChanges(PlayerState playerState)
         {
-            
+            var remaining = MaxTimesTried - playerState.TimesTried;
+            if (remaining == 0)
+            {
+                _countdownText.enabled = false;
+            }
         }
     }
 }

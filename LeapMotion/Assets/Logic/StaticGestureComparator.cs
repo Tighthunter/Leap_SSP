@@ -2,20 +2,39 @@
 
 namespace Assets.Logic
 {
-    class StaticGestureComparator : IGestureComparator
+    internal class StaticGestureComparator : IGestureComparator
     {
         public GestureCompareResult CompareGestures(Gesture gestureOne, Gesture gestureTwo)
         {
             if (Equals(gestureOne, Gesture.GestureStone))
             {
-                if(gestureTwo == Gesture.GesturePaper)
+                if(Equals(gestureTwo, Gesture.GesturePaper))
                 { return GestureCompareResult.GestureTwoWon;}
-                else if(gestureTwo == Gesture.GestureScissors)
+                if(Equals(gestureTwo, Gesture.GestureScissors))
                 { return GestureCompareResult.GestureOneWon;}
-                else if(gestureTwo == Gesture.GestureStone)
+                if(Equals(gestureTwo, Gesture.GestureStone))
                 { return GestureCompareResult.Draw;}
             }
-            //TODO: the 2 others
+            else if (Equals(gestureOne, Gesture.GesturePaper))
+            {
+                if (Equals(gestureTwo, Gesture.GesturePaper))
+                { return GestureCompareResult.Draw; }
+                if (Equals(gestureTwo, Gesture.GestureScissors))
+                { return GestureCompareResult.GestureTwoWon; }
+                if (Equals(gestureTwo, Gesture.GestureStone))
+                { return GestureCompareResult.GestureOneWon; }
+            }
+            else if (Equals(gestureOne, Gesture.GestureScissors))
+            {
+                if (Equals(gestureTwo, Gesture.GesturePaper))
+                { return GestureCompareResult.GestureOneWon; }
+                if (Equals(gestureTwo, Gesture.GestureScissors))
+                { return GestureCompareResult.Draw; }
+                if (Equals(gestureTwo, Gesture.GestureStone))
+                { return GestureCompareResult.GestureTwoWon; }
+            }
+
+            return GestureCompareResult.Draw;
         }
     }
 }

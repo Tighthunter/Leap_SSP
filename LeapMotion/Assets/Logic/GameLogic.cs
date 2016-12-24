@@ -48,6 +48,7 @@ namespace Assets.Logic
                 var compareResult = _gestureComparator.CompareGestures(playerOneState.CurrentGesture,
                     playerTwoState.CurrentGesture);
 
+
             }
             return null;
         }
