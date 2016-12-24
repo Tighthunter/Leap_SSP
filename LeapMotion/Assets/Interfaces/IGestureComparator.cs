@@ -13,6 +13,6 @@ namespace Assets.Interfaces
         /// <param name="gestureOne"></param>
         /// <param name="gestureTwo"></param>
         /// <returns></returns>
-        bool CompareGestures(Gesture gestureOne, Gesture gestureTwo);
+        GestureCompareResult CompareGestures(Gesture gestureOne, Gesture gestureTwo);
     }
 }

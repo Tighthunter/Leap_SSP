@@ -18,6 +18,8 @@ namespace Assets.Logic
         public Text PlayerWinCount;
         public Text Countdown;
 
+        private UiLogic _uiLogic;
+
         void Awake()
         {
             if (_instance == null)

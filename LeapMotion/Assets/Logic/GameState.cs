@@ -6,5 +6,6 @@
         public int PlayerTwoWinCount { get; set; }
 
         public bool GameIsFinished { get; set; }
+        public string WinnerName { get; set; }
     }
 }

@@ -9,8 +9,10 @@ namespace Assets.Logic
         private readonly IPlayer _playerOne;
         private readonly IPlayer _playerTwo;
         private readonly IGestureComparator _gestureComparator;
-        private readonly BehaviorSubject<GameState> _gameStateSubject = new BehaviorSubject<GameState>(null);
-        private IDisposable subscription;
+        private readonly Subject<GameState> _gameStateSubject = new Subject<GameState>();
+        private IDisposable _subscription;
+
+        private GameState _currentGameState = new GameState();
 
         /// <summary>
         /// 
@@ -28,7 +30,7 @@ namespace Assets.Logic
 
         private void SetUpSubscriptions()
         {
-           subscription = _playerOne.GetPlayerState()
+           _subscription = _playerOne.GetPlayerState()
                 .Zip(_playerTwo.GetPlayerState(), new Func<PlayerState,PlayerState,GameState>(HandlePlayerStates))
                 .Where((gameState) => gameState != null)
                 .Subscribe(gamestate => _gameStateSubject.OnNext(gamestate));
