@@ -1,39 +1,45 @@
 ﻿using System;
 using Assets.Interfaces;
 using UniRx;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Logic
 {
     public class GameLogic
     {
-        private readonly IPlayer _playerOne;
-        private readonly IPlayer _playerTwo;
+        private readonly IPlayer _humanPlayer;
+        private readonly IAiPlayer _aiPlayer;
         private readonly IGestureComparator _gestureComparator;
+        private readonly GameConfig _gameConfig;
+        private readonly IObservable<long> _cancelKeyObservable;
+        private readonly IObservable<long> _startKeyObservable;
         private readonly Subject<GameState> _gameStateSubject = new Subject<GameState>();
         private IDisposable _subscription;
 
-        private GameState _currentGameState = new GameState();
+        private readonly GameState _currentGameState = new GameState();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="playerOne">The human player</param>
-        /// <param name="playerTwo">The ai player</param>
-        /// <param name="gestureComparator"></param>
-        public GameLogic(IPlayer playerOne, IPlayer playerTwo, IGestureComparator gestureComparator)
+        public GameLogic(IPlayer humanPlayer, IAiPlayer aiPlayer, IGestureComparator gestureComparator, GameConfig gameConfig, IObservable<long> cancelKeyObservable, IObservable<long> startKeyObservable)
         {
-            _playerOne = playerOne;
-            _playerTwo = playerTwo;
+            _humanPlayer = humanPlayer;
+            _aiPlayer = aiPlayer;
             _gestureComparator = gestureComparator;
+            _gameConfig = gameConfig;
+            _cancelKeyObservable = cancelKeyObservable;
+            _startKeyObservable = startKeyObservable;
+
             SetUpSubscriptions();
         }
 
         private void SetUpSubscriptions()
         {
-           _subscription = _playerOne.GetPlayerState()
-                .Zip(_playerTwo.GetPlayerState(), new Func<PlayerState,PlayerState,GameState>(HandlePlayerStates))
-                .Where((gameState) => gameState != null)
-                .Subscribe(gamestate => _gameStateSubject.OnNext(gamestate));
+            _subscription = _humanPlayer.GetPlayerState()
+                 .Zip(_aiPlayer.GetPlayerState(), new Func<PlayerState, PlayerState, GameState>(HandlePlayerStates))
+                 .Where((gameState) => gameState != null)
+                 .Subscribe(gamestate => _gameStateSubject.OnNext(gamestate));
+
+            _startKeyObservable.Subscribe(OnStartKey);
+            _cancelKeyObservable.Subscribe(OnCancelKey);
         }
 
         public IObservable<GameState> GetGameState()
@@ -41,16 +47,58 @@ namespace Assets.Logic
             return _gameStateSubject;
         }
 
-        private GameState HandlePlayerStates(PlayerState playerOneState, PlayerState playerTwoState)
+        private void OnStartKey(long diff)
         {
-            if (playerOneState.HasChosenGesture && playerTwoState.HasChosenGesture)
+            _aiPlayer.StartAi();
+        }
+
+        private void OnCancelKey(long diff)
+        {
+            SceneManager.LoadScene("Menu");
+        }
+
+        private GameState HandlePlayerStates(PlayerState humanPlayerState, PlayerState aiPlayerState)
+        {
+            Debug.Log("Player states have been changed");
+
+            if (!humanPlayerState.HasChosenGesture || !aiPlayerState.HasChosenGesture) return null;
+
+            var compareResult = _gestureComparator.CompareGestures(humanPlayerState.CurrentGesture,
+                aiPlayerState.CurrentGesture);
+
+            Debug.Log("Comparison result is: " + compareResult);
+
+            switch (compareResult)
             {
-                var compareResult = _gestureComparator.CompareGestures(playerOneState.CurrentGesture,
-                    playerTwoState.CurrentGesture);
-
-
+                case GestureCompareResult.GestureOneWon:
+                    ++_currentGameState.HumanPlayerWinCount;
+                    break;
+                case GestureCompareResult.GestureTwoWon:
+                    ++_currentGameState.AiPlayerWinCount;
+                    break;
             }
-            return null;
+
+            CheckCurrentGameState();
+            _aiPlayer.ResetAi();
+
+            Debug.Log("Current GameState is: " + _currentGameState);
+
+            return _currentGameState;
+        }
+
+        private void CheckCurrentGameState()
+        {
+            var neededWins = _gameConfig.BestOfRounds / 2 + 1;
+            if (_currentGameState.HumanPlayerWinCount >= neededWins)
+            {
+                _currentGameState.GameIsFinished = true;
+                _currentGameState.WinnerName = "Human Player";
+            }
+            else if (_currentGameState.AiPlayerWinCount >= neededWins)
+            {
+                _currentGameState.GameIsFinished = true;
+                _currentGameState.WinnerName = "Ai Player";
+            }
         }
     }
 }

@@ -1,50 +1,68 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Interfaces;
+﻿using Assets.Interfaces;
 using UniRx;
 using UnityEngine;
 
 namespace Assets.Logic
 {
-    public class PrimitiveAiPlayer : MonoBehaviour , IPlayer
+    public class PrimitiveAiPlayer : MonoBehaviour, IAiPlayer
     {
-        private Animation animation;
-        private bool hasStarted = false;
-        private int currentAnimsPlayedCount = 0;
-        private Subject<int> animFinishedSubject = new Subject<int>();
+        private Animation _animation;
+        private bool _hasStarted;
+        private int _currentAnimsPlayedCount;
+        private readonly Subject<int> _animFinishedSubject = new Subject<int>();
+
         public IGestureCalculator GestureCalculator { get; set; }
 
         public MappedHand[] MappedHands;
         public int AnimTimesToPlay = 3;
 
-        //TODO: observable from event
+        private IObservable<PlayerState> myState;
 
-        void Awake()
+        public void Awake()
         {
-            animation = GetComponent<Animation>();
+            _animation = GetComponent<Animation>();
         }
 
         public void StartAi()
         {
-            if (!hasStarted)
+            if (!_hasStarted)
             {
-                animation.Play();
+                _animation.Play();
             }
+        }
+
+        public void ResetAi()
+        {
+            _hasStarted = false;
+            _currentAnimsPlayedCount = 0;
         }
 
         public void OnAnimationFinished()
         {
             Debug.Log("Animation finished");
-            animFinishedSubject.OnNext(++currentAnimsPlayedCount);
+            _animFinishedSubject.OnNext(++_currentAnimsPlayedCount);
+            if (_currentAnimsPlayedCount >= AnimTimesToPlay) return;
+
+            _animation.Rewind();
+            _animation.Play();
         }
 
         public IObservable<PlayerState> GetPlayerState()
         {
-            throw new NotImplementedException();
+            //TODO multiple subscriber only 1 emit
+            return myState ?? (myState = _animFinishedSubject.Select<int, PlayerState>(CalcAiState).Share());
         }
 
+        private PlayerState CalcAiState(int animCount)
+        {
+            var current = new PlayerState { TimesTried = animCount };
+            if (animCount >= AnimTimesToPlay)
+            {
+                current.HasChosenGesture = true;
+                current.CurrentGesture = GestureCalculator.CalculateNextGesture();
+            }
+            Debug.Log("Current AI State is: " + current);
+            return current;
+        }
     }
 }

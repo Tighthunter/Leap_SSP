@@ -6,6 +6,11 @@ namespace Assets.Logic
     {
         public GestureCompareResult CompareGestures(Gesture gestureOne, Gesture gestureTwo)
         {
+            if(gestureOne == null)
+                return GestureCompareResult.GestureTwoWon;
+            if(gestureTwo == null)
+                return GestureCompareResult.GestureOneWon;
+
             if (Equals(gestureOne, Gesture.GestureStone))
             {
                 if(Equals(gestureTwo, Gesture.GesturePaper))

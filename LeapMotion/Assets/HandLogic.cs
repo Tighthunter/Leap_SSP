@@ -1,58 +1,69 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using Leap;
 using Leap.Unity;
 
-public static class HandLogic
+namespace Assets
 {
-    public static Gesture getGesture()
+    public static class HandLogic
     {
-        Controller controller = new Controller();
-        Frame frame = controller.Frame();
-
-        List<Hand> HandList = frame.Hands;
-        List<Finger> FingerList = HandList[0].Fingers;
-
-        PointingState[] pointingstates = new PointingState[5];
-        int i = 0;
-        foreach (var finger in FingerList)
+        public static Gesture GetGesture()
         {
-            if(finger.IsExtended)
+            try
             {
-                pointingstates[i] = PointingState.Extended;
-            } else
-            {
-                pointingstates[i] = PointingState.NotExtended;
-            }
-            i++;
-        }
-        return compareGesture(pointingstates);
-    }
-    private static Gesture compareGesture(PointingState[] pointStates)
-    {
-        List<Gesture> GestureList = new List<Gesture>();
-        GestureList.Add(Gesture.GesturePaper);
-        GestureList.Add(Gesture.GestureScissors);
-        GestureList.Add(Gesture.GestureStone);
+                Controller controller = new Controller();
+                Frame frame = controller.Frame();
 
-        Gesture g = null;
+                List<Hand> HandList = frame.Hands;
+                List<Finger> FingerList = HandList[0].Fingers;
 
-        foreach (var gesture in GestureList)
-        {
-            int i = 0;
-            bool found = true;
-            foreach (var pointingState in gesture.pointingStates)
-            {
-                if (pointingState != pointStates[i++])
+                PointingState[] pointingstates = new PointingState[5];
+                int i = 0;
+                foreach (var finger in FingerList)
                 {
-                    found = false;
-                    break;
+                    if (finger.IsExtended)
+                    {
+                        pointingstates[i] = PointingState.Extended;
+                    }
+                    else
+                    {
+                        pointingstates[i] = PointingState.NotExtended;
+                    }
+                    i++;
                 }
+                return compareGesture(pointingstates);
             }
-            if(found)
-            g = gesture;
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
-        return g;
+
+        private static Gesture compareGesture(PointingState[] pointStates)
+        {
+            List<Gesture> GestureList = new List<Gesture>();
+            GestureList.Add(Gesture.GesturePaper);
+            GestureList.Add(Gesture.GestureScissors);
+            GestureList.Add(Gesture.GestureStone);
+
+            Gesture g = null;
+
+            foreach (var gesture in GestureList)
+            {
+                int i = 0;
+                bool found = true;
+                foreach (var pointingState in gesture.pointingStates)
+                {
+                    if (pointingState != pointStates[i++])
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+                if(found)
+                    g = gesture;
+            }
+            return g;
+        }
     }
 }

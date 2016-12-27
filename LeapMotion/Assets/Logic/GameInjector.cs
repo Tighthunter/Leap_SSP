@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Interfaces;
+﻿using Assets.Interfaces;
 using Assets.Logic.Mock;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +14,15 @@ namespace Assets.Logic
         public Text EnemyWinCount;
         public Text PlayerWinCount;
         public Text Countdown;
+        public HumanPlayer HumanPlayer;
+
+        private IObservable<long> cancelKeyObservable;
+        private IObservable<long> startKeyObservable;
 
         private UiLogic _uiLogic;
+        private GameLogic _gameLogic;
 
-        void Awake()
+        public void Awake()
         {
             if (_instance == null)
             {
@@ -29,13 +31,19 @@ namespace Assets.Logic
             else if (_instance != this)
             {
                 Destroy(gameObject);
+                return;
             }
 
             //Inject properties here
-            if (AiPlayer != null)
-            {
-                AiPlayer.GestureCalculator = new RandomGestureCalculator(new[] {Gesture.GesturePaper, Gesture.GestureScissors, Gesture.GestureStone});
-            }
+            cancelKeyObservable = Observable.EveryFixedUpdate().Where(_ => Input.GetKeyDown(KeyCode.Escape));
+            startKeyObservable = Observable.EveryFixedUpdate().Where(_ => Input.GetKeyDown(KeyCode.Return));
+            AiPlayer.GestureCalculator = new RandomGestureCalculator(new[] {Gesture.GesturePaper, Gesture.GestureScissors, Gesture.GestureStone});
+            HumanPlayer.AiPlayer = AiPlayer;
+            _gameLogic = new GameLogic(HumanPlayer, AiPlayer, new StaticGestureComparator(), GetConfigManager().GetGameConfiguration(), cancelKeyObservable, startKeyObservable);
+            _uiLogic = new UiLogic(EnemyWinCount, PlayerWinCount, Countdown, _gameLogic.GetGameState(), AiPlayer.GetPlayerState());
+
+            cancelKeyObservable.Subscribe().AddTo(this);
+            startKeyObservable.Subscribe().AddTo(this);
         }
 
         public IConfigManager GetConfigManager()

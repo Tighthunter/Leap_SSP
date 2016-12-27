@@ -7,7 +7,7 @@ namespace Assets.Logic
 {
     internal class UiLogic
     {
-        const int MaxTimesTried = 3;
+        private const int MaxTimesTried = 3;
 
         private readonly Text _enemyText;
         private readonly Text _mainPlayerText;
@@ -38,16 +38,20 @@ namespace Assets.Logic
         //for player count
         private void HandleGameChanges(GameState gameState)
         {
-            if (gameState != null)
+            if (gameState == null) return;
+
+            if (gameState.GameIsFinished)
             {
-                if (gameState.GameIsFinished)
-                {
-                    _countdownText.enabled = true;
-                    _countdownText.text = gameState.WinnerName + " won the game! Press Escape to return to the menu";
-                }
-                _enemyText.text = gameState.PlayerOneWinCount.ToString();
-                _mainPlayerText.text = gameState.PlayerTwoWinCount.ToString();
+                _countdownText.enabled = true;
+                _countdownText.text = gameState.WinnerName + " won the game! Press Escape to return to the menu";
             }
+            else
+            {
+                _countdownText.enabled = true;
+                _countdownText.text = "3";
+            }
+            _mainPlayerText.text = gameState.HumanPlayerWinCount.ToString();
+            _enemyText.text = gameState.AiPlayerWinCount.ToString();
         }
 
         //for cd
@@ -57,6 +61,10 @@ namespace Assets.Logic
             if (remaining == 0)
             {
                 _countdownText.enabled = false;
+            }
+            else
+            {
+                _countdownText.text = remaining.ToString();
             }
         }
     }

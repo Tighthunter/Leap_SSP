@@ -1,11 +1,22 @@
-﻿namespace Assets.Logic
+﻿using System;
+
+namespace Assets.Logic
 {
     public class GameState
     {
-        public int PlayerOneWinCount { get; set; }
-        public int PlayerTwoWinCount { get; set; }
+        public int HumanPlayerWinCount { get; set; }
+        public int AiPlayerWinCount { get; set; }
 
         public bool GameIsFinished { get; set; }
         public string WinnerName { get; set; }
+
+        public override string ToString()
+        {
+            var returner = "Human player Win count: " + HumanPlayerWinCount;
+            returner += ", Ai Player Win count: " + AiPlayerWinCount;
+            returner += ", Is game finished?: " + GameIsFinished;
+            returner += ", Winner name: " + WinnerName;
+            return returner;
+        }
     }
 }
