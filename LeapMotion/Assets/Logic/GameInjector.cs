@@ -48,8 +48,7 @@ namespace Assets.Logic
 
         public IConfigManager GetConfigManager()
         {
-            //TODO: martin bitte hier die config laden und einen manager zurückgeben
-            return new MockConfigManager();
+            return new ConfigManager();
         }
     }
 }
