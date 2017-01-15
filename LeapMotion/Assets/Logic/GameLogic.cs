@@ -49,12 +49,13 @@ namespace Assets.Logic
 
         private void OnStartKey(long diff)
         {
-            _aiPlayer.StartAi();
+            if(!_currentGameState.GameIsFinished)
+                _aiPlayer.StartAi();
         }
 
         private void OnCancelKey(long diff)
         {
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Start_Menu");
         }
 
         private GameState HandlePlayerStates(PlayerState humanPlayerState, PlayerState aiPlayerState)
@@ -66,7 +67,7 @@ namespace Assets.Logic
             var compareResult = _gestureComparator.CompareGestures(humanPlayerState.CurrentGesture,
                 aiPlayerState.CurrentGesture);
 
-            Debug.Log("Comparison result is: " + compareResult);
+            Debug.Log("Did human player win?: " + (compareResult == GestureCompareResult.GestureOneWon));
 
             switch (compareResult)
             {

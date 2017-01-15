@@ -28,6 +28,10 @@ namespace Assets.Logic
             if (!_hasStarted)
             {
                 _animation.Play();
+                foreach (var hand in MappedHands)
+                {
+                    hand.Hand.SetActive(hand.GestureName == "Stone");
+                }
             }
         }
 
@@ -49,8 +53,24 @@ namespace Assets.Logic
 
         public IObservable<PlayerState> GetPlayerState()
         {
-            //TODO multiple subscriber only 1 emit
-            return myState ?? (myState = _animFinishedSubject.Select<int, PlayerState>(CalcAiState).Share());
+            if (myState == null)
+            {
+                myState = _animFinishedSubject.Select<int, PlayerState>(CalcAiState).Share();
+                myState.Where(_ => _.HasChosenGesture).Subscribe(SubscribeToSelf);
+            }
+            return myState;
+        }
+
+        private void SubscribeToSelf(PlayerState state)
+        {
+            if (state.HasChosenGesture)
+            {
+                var gest = state.CurrentGesture;
+                foreach(var hand in MappedHands)
+                {
+                    hand.Hand.SetActive(hand.GestureName == gest.gestureName);
+                }
+            }
         }
 
         private PlayerState CalcAiState(int animCount)

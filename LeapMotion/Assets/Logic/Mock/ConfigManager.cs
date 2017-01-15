@@ -13,16 +13,16 @@ namespace Assets.Logic.Mock
 
         public ConfigManager()
         {
-            gameConfig =GameObject.Find("ConfigObject").GetComponent<ConfigObject>().GetGameConfig();
+            var go = GameObject.Find("ConfigObject");
+            if (go != null)
+            {
+                gameConfig = go.GetComponent<ConfigObject>().GetGameConfig();
+            }
         }
 
         public GameConfig GetGameConfiguration()
         {
-            if (gameConfig == null)
-            {
-                return new GameConfig() {BestOfRounds = 3};
-            }
-            return gameConfig;
+            return gameConfig ?? new GameConfig() {BestOfRounds = 3};
         }
     }
 }
