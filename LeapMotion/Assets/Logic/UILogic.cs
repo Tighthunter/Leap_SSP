@@ -43,7 +43,7 @@ namespace Assets.Logic
             if (gameState.GameIsFinished)
             {
                 _countdownText.enabled = true;
-                _countdownText.text = gameState.WinnerName + " won the game! Press Escape to return to the menu";
+                _countdownText.text = gameState.WinnerName + " won!";
             }
             else
             {
