@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Interfaces;
 using UniRx;
+using UnityEditor;
 using UnityEngine.UI;
 
 namespace Assets.Logic
@@ -43,7 +44,12 @@ namespace Assets.Logic
             if (gameState.GameIsFinished)
             {
                 _countdownText.enabled = true;
-                _countdownText.text = gameState.WinnerName + " won!";
+                _countdownText.text = gameState.WinnerName + " Victory!";
+            }
+            else if (gameState.RoundIsFinished)
+            {
+                _countdownText.enabled = true;
+                _countdownText.text = gameState.WinnerName + " won round!";
             }
             else
             {

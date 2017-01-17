@@ -8,6 +8,7 @@ namespace Assets.Logic
         public int AiPlayerWinCount { get; set; }
 
         public bool GameIsFinished { get; set; }
+        public bool RoundIsFinished { get; set; }
         public string WinnerName { get; set; }
 
         public override string ToString()

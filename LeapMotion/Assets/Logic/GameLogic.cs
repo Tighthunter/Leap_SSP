@@ -19,7 +19,8 @@ namespace Assets.Logic
 
         private readonly GameState _currentGameState = new GameState();
 
-        public GameLogic(IPlayer humanPlayer, IAiPlayer aiPlayer, IGestureComparator gestureComparator, GameConfig gameConfig, IObservable<long> cancelKeyObservable, IObservable<long> startKeyObservable)
+        public GameLogic(IPlayer humanPlayer, IAiPlayer aiPlayer, IGestureComparator gestureComparator,
+            GameConfig gameConfig, IObservable<long> cancelKeyObservable, IObservable<long> startKeyObservable)
         {
             _humanPlayer = humanPlayer;
             _aiPlayer = aiPlayer;
@@ -34,9 +35,9 @@ namespace Assets.Logic
         private void SetUpSubscriptions()
         {
             _subscription = _humanPlayer.GetPlayerState()
-                 .Zip(_aiPlayer.GetPlayerState(), new Func<PlayerState, PlayerState, GameState>(HandlePlayerStates))
-                 .Where((gameState) => gameState != null)
-                 .Subscribe(gamestate => _gameStateSubject.OnNext(gamestate));
+                .Zip(_aiPlayer.GetPlayerState(), new Func<PlayerState, PlayerState, GameState>(HandlePlayerStates))
+                .Where((gameState) => gameState != null)
+                .Subscribe(gamestate => _gameStateSubject.OnNext(gamestate));
 
             _startKeyObservable.Subscribe(OnStartKey);
             _cancelKeyObservable.Subscribe(OnCancelKey);
@@ -49,7 +50,7 @@ namespace Assets.Logic
 
         private void OnStartKey(long diff)
         {
-            if(!_currentGameState.GameIsFinished)
+            if (!_currentGameState.GameIsFinished)
                 _aiPlayer.StartAi();
         }
 
@@ -73,12 +74,14 @@ namespace Assets.Logic
             {
                 case GestureCompareResult.GestureOneWon:
                     ++_currentGameState.HumanPlayerWinCount;
+                    _currentGameState.WinnerName = "Human Player";
                     break;
                 case GestureCompareResult.GestureTwoWon:
                     ++_currentGameState.AiPlayerWinCount;
+                    _currentGameState.WinnerName = "AI Player";
                     break;
             }
-
+            _currentGameState.RoundIsFinished = true;
             CheckCurrentGameState();
             _aiPlayer.ResetAi();
 
@@ -89,7 +92,7 @@ namespace Assets.Logic
 
         private void CheckCurrentGameState()
         {
-            var neededWins = _gameConfig.BestOfRounds / 2 + 1;
+            var neededWins = _gameConfig.BestOfRounds/2 + 1;
             if (_currentGameState.HumanPlayerWinCount >= neededWins)
             {
                 _currentGameState.GameIsFinished = true;
